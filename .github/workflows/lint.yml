@@ -1,0 +1,38 @@
+name: Lint
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/**"
+      - "pyproject.toml"
+      - ".flake8"
+      - "requirements.txt"
+  pull_request:
+    paths:
+      - "scripts/**"
+      - "pyproject.toml"
+      - ".flake8"
+      - "requirements.txt"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: black
+        run: black --check scripts/
+
+      - name: isort
+        run: isort --check scripts/
+
+      - name: flake8
+        run: flake8 scripts/
