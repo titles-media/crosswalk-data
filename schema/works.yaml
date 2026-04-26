@@ -1,0 +1,18 @@
+---
+fields:
+  id:
+    type: string
+    required: true
+    description: Internal mddb id. Globally unique.
+    notes: modified base32, lowercase (a-z, 0-9, excluding aiou). Default is 8 chars (5 bytes), max size 16 characters (10 bytes).
+    pattern: ^[0123456789bcdefghjklmnpqrstvwxyz]{8,16}$
+    unique: true
+  title:
+    type: string
+    required: true
+    description: Name of work.
+    pattern: "^.{1,512}$"
+  year:
+    type: integer
+    required: true
+    description: Year the work was created or released.

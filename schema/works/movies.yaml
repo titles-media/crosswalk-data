@@ -1,0 +1,29 @@
+---
+fields:
+  - imdb:
+    name: IMDB
+    id_field: imdb_id
+    active: true
+    required: true
+    pattern: ^tt\d{7,9}$
+  - letterboxd:
+    name: letterboxd
+    id_field: letterboxd_id
+    active: true
+    required: true
+    stable: true
+    pattern: ^[a-zA-Z0-9_-]*$
+  - tmdb:
+    name: TMDB 
+    id_field: tmdb_id
+    active: true
+    required: true
+    stable: true
+    pattern: ^\d{1,8}$
+  - wikidata:
+    name: Wikidata
+    id_field: wikidata_id
+    active: true
+    required: true
+    stable: true
+    pattern: ^Q\d{1,10}$
