@@ -11,7 +11,7 @@ def load_yaml(path):
         return yaml.safe_load(f)
 
 
-def validate_field(value, rules, field_name, row_num):
+def validate_field(value, rules, field_name, row_label):
     errors = []
 
     if "active" in rules and not rules.get("active"):
@@ -19,31 +19,31 @@ def validate_field(value, rules, field_name, row_num):
 
     # Check if required value present
     if rules.get("required") and not value:
-        errors.append(f"Row {row_num}: '{field_name}' is required")
+        errors.append(f"{row_label}: '{field_name}' is required")
 
     # Check whitespace
     if len(value) != len(value.strip()):
         errors.append(
-            f"Row {row_num}: '{field_name}' contains leading/trailing whitespace."
+            f"{row_label}: '{field_name}' contains leading/trailing whitespace."
         )
 
     # Validate pattern
     if "pattern" in rules and value:
         if not re.fullmatch(rules["pattern"], value):
             errors.append(
-                f"Row {row_num}: '{field_name}' value '{value}' does not match pattern"
+                f"{row_label}: '{field_name}' value '{value}' does not match pattern"
             )
 
     # Check enum value valid
     if "enum" in rules and value not in rules["enum"]:
         errors.append(
-            f"Row {row_num}: '{field_name}' value '{value}' not in allowed values"
+            f"{row_label}: '{field_name}' value '{value}' not in allowed values"
         )
 
     return errors
 
 
-def check_duplicate_ids(id_field_name: str, id_val: any, seen_ids: set, line_idx: int):
+def check_duplicate_ids(id_field_name: str, id_val: any, seen_ids: set, row_label: str):
     errors = []
 
     if not id_val:
@@ -51,7 +51,7 @@ def check_duplicate_ids(id_field_name: str, id_val: any, seen_ids: set, line_idx
 
     if id_val in seen_ids:
         errors.append(
-            f"Row {line_idx}: Duplicate value '{id_val}' for column '{id_field_name}'"
+            f"{row_label}: Duplicate value '{id_val}' for column '{id_field_name}'"
         )
     else:
         seen_ids.add(id_val)
@@ -71,20 +71,24 @@ def validate_csv(csv_path, core_schema_path, typed_schema_path, fail_fast=False)
         reader = csv.DictReader(f)
         prev_id = None
         for i, row in enumerate(reader, start=2):  # start=2 to account for header
+            title = row.get("title", "")
+            row_label = f"Row {i} ({title})" if title else f"Row {i}"
             # Verify sorting
             if prev_id and row.get("id") < prev_id:
                 errors.append(
-                    f"Row {i}: Not sorted, ID '{row.get('id')}' comes after '{prev_id}'"
+                    f"{row_label}: Not sorted, ID '{row.get('id')}' comes after '{prev_id}'"
                 )
                 if fail_fast and errors:
                     print("\n".join(errors))
                     sys.exit(1)
             for field, rules in core_schema.items():
                 value = row.get(field, "")
-                errors.extend(validate_field(value, rules, field, i))
+                errors.extend(validate_field(value, rules, field, row_label))
                 if rules.get("unique", False):
                     # Metadata fields assumed to not be unique
-                    errors.extend(check_duplicate_ids(field, value, seen_ids[field], i))
+                    errors.extend(
+                        check_duplicate_ids(field, value, seen_ids[field], row_label)
+                    )
                 if fail_fast and errors:
                     print("\n".join(errors))
                     sys.exit(1)
@@ -92,10 +96,12 @@ def validate_csv(csv_path, core_schema_path, typed_schema_path, fail_fast=False)
                 field = s["id_field"]
                 rules = s
                 value = row.get(field, "")
-                errors.extend(validate_field(value, rules, field, i))
+                errors.extend(validate_field(value, rules, field, row_label))
                 if rules.get("unique", True):
                     # IDs are assumed to be unique
-                    errors.extend(check_duplicate_ids(field, value, seen_ids[field], i))
+                    errors.extend(
+                        check_duplicate_ids(field, value, seen_ids[field], row_label)
+                    )
                 if fail_fast and errors:
                     print("\n".join(errors))
                     sys.exit(1)

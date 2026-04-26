@@ -73,7 +73,12 @@ def main():
         description="Add one or more films to movies.csv from Wikidata."
     )
     parser.add_argument(
-        "provided_ids", nargs="+", help="Wikidata (Q…) or IMDb (tt…) ID(s)"
+        "provided_ids", nargs="*", help="Wikidata (Q…) or IMDb (tt…) ID(s)"
+    )
+    parser.add_argument(
+        "--from-file",
+        metavar="FILE",
+        help="File of IDs to add, one per line (combined with any positional IDs)",
     )
     parser.add_argument(
         "--ignore-existing",
@@ -93,10 +98,21 @@ def main():
     )
     args = parser.parse_args()
 
-    added, skipped, failed = [], [], []
-    total = len(args.provided_ids)
+    ids_from_file = []
+    if args.from_file:
+        with open(args.from_file) as f:
+            ids_from_file = [
+                line.strip() for line in f if line.strip() and not line.startswith("#")
+            ]
 
-    for i, provided_id in enumerate(args.provided_ids):
+    all_ids = (args.provided_ids or []) + ids_from_file
+    if not all_ids:
+        parser.error("provide at least one ID as an argument or via --from-file")
+
+    added, skipped, failed = [], [], []
+    total = len(all_ids)
+
+    for i, provided_id in enumerate(all_ids):
         print(f"[{i + 1}/{total}] Fetching {provided_id}...")
         film = get_film_data(provided_id)
 
