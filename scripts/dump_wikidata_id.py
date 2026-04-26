@@ -119,7 +119,7 @@ def get_film_data(provided_id) -> Film:
     Retrieves structured data for a film from Wikidata.
 
     Args:
-        provided_id (str): The provided_id of the film, imdb or wikidata (e.g., "Q158312", for "The Matrix").
+        provided_id (str): IMDb (tt…) or Wikidata (Q…) ID of the film.
 
     Returns:
         dict: A dictionary containing the film's title, year, IMDb ID, and TMDb ID,
@@ -194,8 +194,6 @@ if __name__ == "__main__":
     for i, provided_id in enumerate(args.provided_ids):
         film_data = get_film_data(provided_id)
         if film_data:
-            # fields = [str(f) for f in [film_data.id or '', film_data.title, film_data.year, film_data.imdb_id or "", film_data.letterboxd_id or "",film_data.tmdb_id or "",film_data.wikidata_id or ""]]
-            # print(";".join(fields))
             writer.writerow(film_data.__dict__)
         else:
             writer.writerow({"provided_id": provided_id})
