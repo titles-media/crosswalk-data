@@ -28,7 +28,7 @@ Film and media data is scattered across incompatible systems — IMDb, TMDB, Let
 
 ### Who This Isn't For
 
-- If you need rich metadata (cast, crew, ratings, genres), use the upstream sources directly or see [titles-media/crosswalk](https://github.com/titles-media/crosswalk).
+- If you need this data in a more flexible format (JSON, Parquet, etc.) or with richer metadata, use [titles-media/crosswalk](https://github.com/titles-media/crosswalk) — it is built from this data and is the better starting point for most use cases.
 - If you need exhaustive historical coverage, be aware that backfill is ongoing and incomplete.
 
 ## Data
@@ -63,7 +63,9 @@ Data is added in roughly this order:
 
 ## Usage
 
-Data files are plain CSV and can be used directly. To use as a dependency, pin to a specific commit.
+If you want to consume this data, we strongly recommend [titles-media/crosswalk](https://github.com/titles-media/crosswalk) instead — it contains the same core data but is available in JSON, Parquet, and other formats that are much easier to work with in most contexts.
+
+If you specifically need the raw CSV source, data files can be used directly. Pin to a specific commit for stability.
 
 ## Development
 
@@ -89,16 +91,20 @@ python scripts/validate_works.py data/works/movies.csv
 
 ## Contributing
 
-Pull requests are welcome for additions and corrections.
+Pull requests are welcome.
 
 **Likely to be accepted:**
 - New films where all required external IDs can be resolved.
 - Corrections to existing ID mappings.
+- Tooling improvements or bug fixes to the scripts.
+
+**Will be considered:**
+- Additional ID sources where appropriate. Please open a discussion before doing any significant work — inclusion criteria is currently subjective.
 
 **Likely to be rejected:**
 - Schema changes — the schema is intentionally stable to protect downstream consumers.
 - Partial entries missing required IDs.
-- Metadata additions beyond what is defined in the schema.
+- Metadata additions — this repo is intentionally minimal by design.
 
 When in doubt, open an issue before submitting a PR.
 
