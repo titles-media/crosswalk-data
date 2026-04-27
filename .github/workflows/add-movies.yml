@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       ids:
-        description: "IMDb (tt…) or Wikidata (Q…) IDs, one per line"
+        description: "IMDb (tt…) or Wikidata (Q…) IDs, comma or space separated"
         required: true
         type: string
       branch:
@@ -52,7 +52,7 @@ jobs:
       - name: Write IDs to file
         env:
           IDS: ${{ inputs.ids }}
-        run: echo "$IDS" > /tmp/ids.txt
+        run: echo "$IDS" | tr ', ' '\n' | grep -v '^$' > /tmp/ids.txt
 
       - name: Run add_movie.py
         run: |
