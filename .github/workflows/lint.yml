@@ -9,11 +9,6 @@ on:
       - ".flake8"
       - "requirements.txt"
   pull_request:
-    paths:
-      - "scripts/**"
-      - "pyproject.toml"
-      - ".flake8"
-      - "requirements.txt"
 
 jobs:
   lint:

@@ -6,9 +6,6 @@ on:
       - "data/**"
       - "schema/**"
   pull_request:
-    paths:
-      - "data/**"
-      - "schema/**"
   workflow_dispatch:
 
 jobs:
