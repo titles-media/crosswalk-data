@@ -155,6 +155,7 @@ def main():
             id_field="id",
             hash_fields=HASH_FIELDS,
             digest_bytes=DIGEST_BYTES,
+            prefix="movie",
         )
         sort_csv_by_id(str(MOVIES_CSV), field="id")
         validate_csv(str(MOVIES_CSV), str(CORE_SCHEMA), str(TYPED_SCHEMA))
