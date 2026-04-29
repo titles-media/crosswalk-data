@@ -36,15 +36,25 @@ Film and media data is scattered across incompatible systems — IMDb, TMDB, Let
 | File | Description |
 |------|-------------|
 | `data/works/movies.csv` | Feature films |
+| `data/persons.csv` | Persons (directors, actors, and others with film credits) |
 
-Each row contains an internal `id`, `title`, `year`, and external IDs. See [schema/README.md](schema/README.md) for full schema documentation and validation rules.
+Each row contains an internal `id` and external IDs. See [schema/README.md](schema/README.md) for full schema documentation and validation rules.
 
+### Works (movies)
 
 | Field | Source |
 |-------|--------|
 | `imdb_id` | [IMDb](https://www.imdb.com) |
 | `tmdb_id` | [The Movie Database](https://www.themoviedb.org) |
 | `letterboxd_id` | [Letterboxd](https://letterboxd.com) |
+| `wikidata_id` | [Wikidata](https://www.wikidata.org) |
+
+### Persons
+
+| Field | Source |
+|-------|--------|
+| `imdb_id` | [IMDb](https://www.imdb.com) |
+| `tmdb_id` | [The Movie Database](https://www.themoviedb.org) |
 | `wikidata_id` | [Wikidata](https://www.wikidata.org) |
 
 ### Internal IDs
@@ -84,9 +94,17 @@ python scripts/add_movie.py tt12345678
 python scripts/add_movie.py Q1 Q2 Q3 --ignore-existing
 ```
 
+**Add a person** (by Wikidata or IMDb ID):
+```bash
+python scripts/add_person.py Q12345
+python scripts/add_person.py nm1234567
+```
+
 **Validate data:**
 ```bash
 python scripts/validate_works.py data/works/movies.csv
+python scripts/validate_persons.py data/persons.csv
+python scripts/validate_unique_ids.py
 ```
 
 ## Contributing
