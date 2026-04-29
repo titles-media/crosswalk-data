@@ -11,7 +11,7 @@ This repo is the authoritative source of stable internal IDs for media works. It
 ### Philosophy
 
 - **Source of truth**: Strict, flat CSV files — one file per work type.
-- **Identifiers only**: Internal IDs and external IDs only. No ratings, genres, cast, or other dynamic metadata.
+- **Identifiers first**: Works contain internal and external IDs only. Persons include minimal metadata (name, birth date) strictly for linking and disambiguation — not as an authoritative biographical source.
 - **Stable IDs**: Once assigned, an internal ID will never change. Stability takes priority over any deterministic scheme.
 - **Full coverage required**: A work is only included when all required external IDs can be resolved. Partial entries are not committed.
 - **Strict validation**: Schema-enforced patterns, uniqueness, and sort order are validated on every change.
@@ -57,17 +57,19 @@ Each row contains an internal `id` and external IDs. See [schema/README.md](sche
 | `tmdb_id` | [The Movie Database](https://www.themoviedb.org) |
 | `wikidata_id` | [Wikidata](https://www.wikidata.org) |
 
+Person entries also include name and birth date fields. These are incidental metadata — present for linking and disambiguation, not as an authoritative biographical record. We aim to keep them accurate and up to date, but do not treat this repo as the source of truth for biographical data.
+
 ### Internal IDs
 
 Internal IDs use a modified Base32 alphabet (`0123456789bcdefghjklmnpqrstvwxyz`). They are opaque and stable — treat them as permanent identifiers and do not attempt to reconstruct them from field values.
 
 ### Coverage Priority
 
-Data is added in roughly this order:
+**Films and persons** are both prioritized around major awards coverage, working backwards from recent years:
 
-1. **Current theatrical releases** — films in wide release
-2. **Recent years by box office** — top-grossing films from the last few years
-3. **Awards** — Oscar nominees and winners, working backwards
+1. **Awards nominees** — major awards shows (Oscars, BAFTA, Golden Globes, etc.), most recent first
+2. **Current theatrical releases** — films in wide release and their key credited persons
+3. **Recent years by box office** — top-grossing films and associated persons
 4. **IMDb most popular** — broad cultural relevance
 5. **Historical backfill** — year by year from recent to earliest
 
