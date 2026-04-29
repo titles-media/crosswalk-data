@@ -23,3 +23,9 @@ jobs:
 
       - name: Validate movies
         run: python scripts/validate_works.py data/works/movies.csv --fail-fast
+
+      - name: Validate persons
+        run: python scripts/validate_persons.py data/persons.csv --fail-fast
+
+      - name: Validate global ID uniqueness
+        run: python scripts/validate_unique_ids.py

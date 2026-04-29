@@ -1,0 +1,62 @@
+---
+fields:
+  id:
+    type: string
+    required: true
+    description: Internal person ID. Globally unique.
+    notes: Blake2b hash of name + birth date fields with "person" prefix. Modified base32, lowercase. 8 chars (5 bytes) default, max 16 chars (10 bytes).
+    pattern: ^[0123456789bcdefghjklmnpqrstvwxyz]{8,16}$
+    unique: true
+  name_last:
+    type: string
+    required: true
+    description: Family name as credited (guild/screen name), or full name for mononyms.
+    pattern: "^.{1,256}$"
+  name_first:
+    type: string
+    required: false
+    description: Given name as credited. Uses well-known or credited form, not necessarily legal name (e.g. "Josh" not "Joshua"). Empty for mononyms.
+    pattern: "^.{0,256}$"
+  name_middle:
+    type: string
+    required: false
+    description: Middle name, included only when it is part of the person's credited identity (e.g. Paul Thomas Anderson, David O. Russell, Michael B. Jordan).
+    pattern: "^.{0,256}$"
+  birth_year:
+    type: integer
+    required: true
+    description: Four-digit birth year.
+    pattern: ^\d{4}$
+  birth_month:
+    type: integer
+    required: false
+    description: Birth month (1–12).
+    pattern: ^(1[0-2]|[1-9])$
+  birth_day:
+    type: integer
+    required: false
+    description: Birth day (1–31).
+    pattern: ^(3[01]|[12]\d|[1-9])$
+
+sources:
+  - imdb:
+    name: IMDb
+    id_field: imdb_id
+    active: true
+    required: false
+    stable: true
+    pattern: ^nm\d{7,10}$
+  - wikidata:
+    name: Wikidata
+    id_field: wikidata_id
+    active: true
+    required: false
+    stable: true
+    pattern: ^Q\d{1,10}$
+  - tmdb:
+    name: TMDB
+    id_field: tmdb_id
+    active: true
+    required: false
+    stable: true
+    pattern: ^\d{1,8}$
